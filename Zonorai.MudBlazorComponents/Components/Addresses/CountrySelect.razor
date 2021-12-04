@@ -1,0 +1,18 @@
+@using Zonorai.MudBlazorComponents.Models
+@using EnumsNET
+<MudSelect Value="Value" ValueChanged="ValueChanged">
+    @foreach (var country in Enum.GetValues<Country>())
+    {
+        <MudSelectItem Value="country">@country.AsString(EnumFormat.Description)</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+
+    [Parameter]
+    public Country Value { get; set; }
+
+    [Parameter]
+    public EventCallback<Country> ValueChanged { get; set; }
+
+}
