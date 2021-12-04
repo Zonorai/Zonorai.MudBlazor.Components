@@ -6,29 +6,24 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>Zonorai.MudBlazor.Components</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Authors>Carel vd Merwe</Authors>
     <Company>Zonorai</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/Zonorai/Zonorai.MudBlazor.Components</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>
       A package extending Mud Blazor with some commonly used components:
+      Google Autocomple Address Form
       Google Autocomplete Location Input Field
+      ISO Countries Select
+      Countries Autocomplete
       Credit Card Input Field
+      Credit Card Date Field
       InputMask Field
       Generic Dialog Prompt
       Docked Fab Button
-      (WIP)Mediatr Form (Autovalidation and submission of forms based on a mediatr command/query object)
-      (WIP) Git repo and documentation
-      
-      Index.Html imports:
-      CSS:
-      href="_content/Zonorai.MudBlazorComponents/paymenticons.css" rel="stylesheet"
-      Scripts:
-      "For the autocomplete location field you need to add your google places script tag"
-      src="_content/Zonorai.MudBlazorComponents/js/GoogleAutoCompleteHelper.js"
-      src="_content/Zonorai.MudBlazorComponents/js/IMask.js"
-      src="_content/Zonorai.MudBlazorComponents/js/MaskedInput.js"
-      src="_content/Zonorai.MudBlazorComponents/js/Cleave.js"
     </Description>
   </PropertyGroup>
 

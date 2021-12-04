@@ -2,6 +2,7 @@
 @using Zonorai.MudBlazorComponents.Components.Prompt
 @using Zonorai.MudBlazorComponents.Interop
 @using Newtonsoft.Json
+@using Zonorai.MudBlazorComponents.Components.Docked
 @inject IDialogService _dialogService;
 @inject GoogleQueryAutocomplete _autocomplete;
 @*<AutocompleteLocationField></AutocompleteLocationField>
@@ -18,6 +19,7 @@
 <AddressForm Value="Address"></AddressForm>
 
 <MudText>@Text</MudText>*@
+<DockedFabButton Position="DockedPosition.BottomRight"></DockedFabButton>
 <MudButton OnClick="WriteAddress" Variant="Variant.Filled" Color="Color.Primary">Print Address</MudButton>
 @code{
     private string Text { get; set; }
