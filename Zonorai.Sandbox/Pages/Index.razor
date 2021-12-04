@@ -13,7 +13,7 @@
     <MudTextField @bind-Value="@context.Model.Name"></MudTextField>
 </MediatrForm>
 <MudButton OnClick="ShowDialog">Test Dialog</MudButton>*@
-<MudAddressForm DetailedForm="false" @bind-Value="Address"></MudAddressForm>
+<MudAddressForm DetailedForm="false" @bind-Value="Address" @ref="AddressForm"></MudAddressForm>
 @*<MudAddressForm UseSingleInput="false" Value="Address"></MudAddressForm>
 <CountryAutocompleteField></CountryAutocompleteField>
 <AddressForm Value="Address"></AddressForm>
@@ -27,18 +27,27 @@
     {
         Console.WriteLine(model.Name);
     }
-
-    MudAddress Address { get; set; } = new(){FormattedAddress = "290 10th St, Hermanus, 7200, South Africa",PlaceId = "ChIJdzATXW8Jzh0RDaGawUGMvZ0"};
+    MudAddressForm AddressForm { get; set; }
+    MudAddress Address { get; set; }
     async Task FormSubmitted(int? hello)
     {
         Console.WriteLine(hello);
         await Task.CompletedTask;
     }
 
+    protected override Task OnParametersSetAsync()
+    {
+        
+        return base.OnParametersSetAsync();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         var value = await _autocomplete.GetGeoCodingFromPlaceId("ChIJdzATXW8Jzh0RDaGawUGMvZ0");
         Text = JsonConvert.SerializeObject(value);
+        Address =
+            new() {FormattedAddress = "290 10th St, Hermanus, 7200, South Africa", PlaceId = "ChIJdzATXW8Jzh0RDaGawUGMvZ0"};
+        await AddressForm.SetAddress(Address);
        await base.OnInitializedAsync();
     }
 

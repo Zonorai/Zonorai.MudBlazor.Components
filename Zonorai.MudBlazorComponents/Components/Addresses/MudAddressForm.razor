@@ -19,7 +19,7 @@
     public AutocompleteLocationField AutocompleteLocationField { get; set; }
 
     [Parameter]
-    public MudAddress Value { get; set; }
+    public MudAddress Value { get; set; } = new();
 
     [Parameter]
     public EventCallback<MudAddress> ValueChanged { get; set; }
@@ -28,24 +28,21 @@
     {
         if (Value == null)
         {
-            Value = new();
+            Value = new MudAddress();
         }
         await base.OnInitializedAsync();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+
+    public async Task SetAddress(MudAddress address)
     {
-        if (firstRender)
+        Value = address;
+        if (string.IsNullOrEmpty(Value.PlaceId) == false)
         {
-            if (string.IsNullOrEmpty(Value.PlaceId) == false)
-            {
-                await AutocompleteLocationField.SelectOption(Value.ToAutoCompleteQueryResponseItem());
-            }
+            await AutocompleteLocationField.SelectOption(Value.ToAutoCompleteQueryResponseItem());
         }
-
-        await base.OnAfterRenderAsync(firstRender);
     }
-
     async Task AutoCompleteSelected(AutoCompleteQueryResponseItem responseItem)
     {
         var response = await _autocomplete.GetGeoCodingFromPlaceId(responseItem.PlaceId);
