@@ -1,5 +1,56 @@
-<h3>MudAddressForm</h3>
+@using Zonorai.MudBlazorComponents.Extensions
+@using Zonorai.MudBlazorComponents.Models.Google
+@inject GoogleQueryAutocomplete _autocomplete;
+
+<AutocompleteLocationField @ref="AutocompleteLocationField" ValueChanged="AutoCompleteSelected" Label="Enter a location"></AutocompleteLocationField>
+<MudSwitch @bind-Checked="DetailedForm" Label="Display Details"></MudSwitch>
+@if (DetailedForm)
+{
+    <AddressForm Value="Value">
+
+    </AddressForm>
+}
 
 @code {
-    
+
+    [Parameter]
+    public bool DetailedForm { get; set; } = false;
+
+    public AutocompleteLocationField AutocompleteLocationField { get; set; }
+
+    [Parameter]
+    public MudAddress Value { get; set; }
+
+    [Parameter]
+    public EventCallback<MudAddress> ValueChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Value == null)
+        {
+            Value = new();
+        }
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (string.IsNullOrEmpty(Value.PlaceId) == false)
+            {
+                await AutocompleteLocationField.SelectOption(Value.ToAutoCompleteQueryResponseItem());
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task AutoCompleteSelected(AutoCompleteQueryResponseItem responseItem)
+    {
+        var response = await _autocomplete.GetGeoCodingFromPlaceId(responseItem.PlaceId);
+        Value = response.ToMudAddress();
+        await ValueChanged.InvokeAsync(Value);
+    }
+
 }

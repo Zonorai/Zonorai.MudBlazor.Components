@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zonorai.Sandbox", "Zonorai.Sandbox\Zonorai.Sandbox.csproj", "{F654BC89-3F81-4634-99A1-10642A52AA60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zonorai.MudBlazorComponents", "Zonorai.MudBlazorComponents\Zonorai.MudBlazorComponents.csproj", "{B8DFC34E-B1CE-4147-AA8C-5146F6212B0C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F654BC89-3F81-4634-99A1-10642A52AA60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F654BC89-3F81-4634-99A1-10642A52AA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F654BC89-3F81-4634-99A1-10642A52AA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F654BC89-3F81-4634-99A1-10642A52AA60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8DFC34E-B1CE-4147-AA8C-5146F6212B0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8DFC34E-B1CE-4147-AA8C-5146F6212B0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8DFC34E-B1CE-4147-AA8C-5146F6212B0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8DFC34E-B1CE-4147-AA8C-5146F6212B0C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

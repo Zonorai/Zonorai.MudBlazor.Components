@@ -1,0 +1,49 @@
+﻿@*Thank you @raphadesa (https://github.com/raphadesa/BlazorInputMask)*@
+@inject IJSRuntime JSRuntime
+@using Microsoft.JSInterop
+
+@if (validateOnKeyPress)
+{
+    <MudTextField Id="@id"  @bind-Value="@Value" @oninput="EventCallback.Factory.CreateBinder<string>(this, __value => Value = __value, Value)"></MudTextField>
+}
+else
+{
+    <MudTextField Id="@id" @bind-Value="@Value"></MudTextField>
+}
+
+@code {
+
+    [Parameter]
+    public string id { get; set; }
+    [Parameter]
+    public string rawValue { get; set; }
+    [Parameter]
+    public bool validateOnKeyPress { get; set; } = true;
+    [Parameter]
+    public string Mask { get; set; }
+    [Parameter]
+    public string Value { get; set; }
+    
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrEmpty(id))
+            id = Guid.NewGuid().ToString();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var pattern = Mask;
+            var isRegEx = pattern.StartsWith("/") && pattern.EndsWith("/");
+            if (isRegEx)
+                pattern = pattern.TrimStart('/').TrimEnd('/');
+            await JSRuntime.InvokeVoidAsync("mask", id, pattern, isRegEx, DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public void returnUnmaskedValue(string value)
+    {
+        rawValue = value;
+    }
+}

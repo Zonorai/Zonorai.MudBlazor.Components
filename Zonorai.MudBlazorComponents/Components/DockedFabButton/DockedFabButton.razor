@@ -1,0 +1,14 @@
+﻿@using Zonorai.MudBlazorComponents.Components.Docked
+<Docked Position="@Position">
+    <MudFab Icon="@Icon" OnClick="@OnClick" Color="Color.Info"></MudFab>
+</Docked>
+
+@code {
+
+    [Parameter]
+    public DockedPosition Position { get; set; } = DockedPosition.BottomRight;
+    [Parameter]
+    public Action OnClick { get; set; }
+    [Parameter]
+    public string Icon { get; set; }
+}

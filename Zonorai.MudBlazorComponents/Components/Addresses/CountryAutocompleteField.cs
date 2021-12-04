@@ -1,11 +1,9 @@
 using EnumsNET;
-using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Zonorai.MudBlazorComponents.Interop;
 using Zonorai.MudBlazorComponents.Models;
 
-namespace Zonorai.MudBlazorComponents.Components.AutocompleteLocation;
+namespace Zonorai.MudBlazorComponents.Components.Addresses;
 
 public class CountryAutocompleteField : MudAutocomplete<Country>
 {

@@ -1,0 +1,94 @@
+﻿@using FluentValidation
+@using MediatR
+@using MudBlazor
+@using Zonorai.MudBlazorComponents.Models
+@typeparam TResponse
+@typeparam TRequest where TRequest : IRequest<TResponse>
+@inject ISender _sender;
+@inject IEnumerable<IValidator<TRequest>> _validators;
+
+<MudForm @ref="Form" Model="@Model" IsValidChanged="ValidationChanged">
+    <MudText Typo="Typo.h4" GutterBottom="true">@FormHeaderText</MudText>
+    @ChildContent(new FluentFormContext<TRequest>(ValidateValue,@Model))
+    
+    <MudButton Disabled="ButtonDisabled" Class="mt-6" OnClick="async () => await Submit()" Variant="@ButtonVariant" Color="@ButtonColor" Size="Size.Large" FullWidth="FullWidthButton">@SubmitButtonText</MudButton>
+</MudForm>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!_validators.Any())
+        {
+            ButtonDisabled = false;
+        }
+        base.OnInitialized();
+    }
+
+    public bool ButtonDisabled { get; set; } = true;
+    [Parameter]
+    public TRequest Model { get; set; } = Activator.CreateInstance<TRequest>();
+    [Parameter]
+    public bool FullWidthButton { get; set; } = false;
+    [Parameter]
+    public string SubmitButtonText { get; set; } = "Submit";
+
+    [Parameter]
+    public Variant ButtonVariant { get; set; } = Variant.Filled;
+
+    [Parameter]
+    public Color ButtonColor { get; set; } = Color.Primary;
+    MudForm Form { get; set; }
+    /// <summary>Child content of component.</summary>
+    [Parameter]
+    public RenderFragment<FluentFormContext<TRequest>> ChildContent { get; set; }
+    [Parameter]
+    public EventCallback<TResponse?> OnSubmit { get; set; }
+    [Parameter]
+    public string FormHeaderText { get; set; }
+
+    private TResponse Result { get; set; }
+    
+    void ValidationChanged(bool valid)
+    {
+        ButtonDisabled = !Form.IsValid;
+       
+        StateHasChanged();
+    }
+    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+    {
+        if (propertyName.StartsWith("Model."))
+        {
+            propertyName = propertyName.Substring(6);
+        }
+        List<string> errors = new List<string>();
+        foreach (var validator in _validators)
+        {
+            var result = await validator.ValidateAsync(ValidationContext<TRequest>.CreateWithOptions((TRequest)model, x => x.IncludeProperties(propertyName)));
+            if (!result.IsValid)
+            {
+                errors.AddRange( result.Errors.Select(e => e.ErrorMessage));
+            }
+        }
+        return errors;
+    };
+    async Task Submit()
+    {
+        await Form.Validate();
+        StateHasChanged();
+        if (Form.IsValid == false)
+        {
+            return;
+        }
+        try
+        {
+            
+            var result = await _sender.Send(Model);
+            Result = result;
+            await OnSubmit.InvokeAsync(result);
+        }
+        catch (Exception e)
+        {
+            await OnSubmit.InvokeAsync();
+        }
+    }
+}

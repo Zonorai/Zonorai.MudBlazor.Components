@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>Zonorai.MudBlazor.Components</PackageId>
+    <Version>1.0.3</Version>
+    <Authors>Carel vd Merwe</Authors>
+    <Company>Zonorai</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>
+      A package extending Mud Blazor with some commonly used components:
+      Google Autocomplete Location Input Field
+      Credit Card Input Field
+      InputMask Field
+      Generic Dialog Prompt
+      Docked Fab Button
+      (WIP)Mediatr Form (Autovalidation and submission of forms based on a mediatr command/query object)
+      (WIP) Git repo and documentation
+      
+      Index.Html imports:
+      CSS:
+      href="_content/Zonorai.MudBlazorComponents/paymenticons.css" rel="stylesheet"
+      Scripts:
+      "For the autocomplete location field you need to add your google places script tag"
+      src="_content/Zonorai.MudBlazorComponents/js/GoogleAutoCompleteHelper.js"
+      src="_content/Zonorai.MudBlazorComponents/js/IMask.js"
+      src="_content/Zonorai.MudBlazorComponents/js/MaskedInput.js"
+      src="_content/Zonorai.MudBlazorComponents/js/Cleave.js"
+    </Description>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Enums.NET" Version="4.0.0" />
+    <PackageReference Include="FluentValidation" Version="10.3.4" />
+    <PackageReference Include="Geo.Google" Version="1.0.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+    <PackageReference Include="MudBlazor" Version="6.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\fonts" />
+  </ItemGroup>
+
+</Project>

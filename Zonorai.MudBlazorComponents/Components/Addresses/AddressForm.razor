@@ -1,10 +1,15 @@
-
-@*<MudTextField Label="Street Address"></MudTextField>
-<MudTextField Label="Apartment, unit, suite, or floor #"></MudTextField>
-<MudTextField Label="City"></MudTextField>
-<MudTextField Label="Province"></MudTextField>
-<MudTextField Label="Zip Code"></MudTextField>
-<MudTextField Label="Country"></MudTextField>*@
+<MudTextField @bind-Value="Value.StreetAddress" Label="Street Address" Variant="Variant"></MudTextField>
+<MudTextField @bind-Value="Value.AddressLineTwo" Label="Apartment, unit, suite, or floor #" Variant="Variant"></MudTextField>
+<MudTextField @bind-Value="Value.City" Label="City" Variant="Variant"></MudTextField>
+<MudTextField @bind-Value="Value.Province" Label="Province" Variant="Variant"></MudTextField>
+<MudTextField @bind-Value="Value.ZipCode" Label="Zip Code" Variant="Variant"></MudTextField>
+<CountryAutocompleteField @bind-Value="Value.Country" Label="Country" Variant="Variant"></CountryAutocompleteField>
 @code {
-    
+
+    [Parameter]
+    public MudAddress Value { get; set; } = new();
+
+    [Parameter]
+    public Variant Variant { get; set; } = Variant.Text;
+
 }

@@ -1,0 +1,27 @@
+﻿<MudNavMenu>
+    <div style="margin-top: 50px;"></div>
+    <MudTooltip Text="Dashboard" Placement="Placement.Right">
+        <MudNavLink Href="/personal/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Info"></MudNavLink>
+    </MudTooltip>
+    <MudSpacer></MudSpacer>
+    <MudTooltip Text="Employees" Placement="Placement.Right">
+        <MudNavLink Href="" Icon="@Icons.Material.Filled.Person" IconColor="Color.Info"></MudNavLink>
+    </MudTooltip>
+    <MudSpacer></MudSpacer>
+    <MudTooltip Text="Sites" Placement="Placement.Right">
+        <MudNavLink Href="" Icon="@Icons.Material.Filled.Person" IconColor="Color.Info"></MudNavLink>
+    </MudTooltip>
+
+</MudNavMenu>
+
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

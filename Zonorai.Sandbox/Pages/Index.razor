@@ -1,0 +1,64 @@
+﻿@page "/"
+@using Zonorai.MudBlazorComponents.Components.Prompt
+@using Zonorai.MudBlazorComponents.Interop
+@using Newtonsoft.Json
+@inject IDialogService _dialogService;
+@inject GoogleQueryAutocomplete _autocomplete;
+@*<AutocompleteLocationField></AutocompleteLocationField>
+<MaskedInput Mask="/^[1-6]\d{0,5}$/"></MaskedInput>
+<CreditCardField></CreditCardField>
+<CreditCardDateField></CreditCardDateField>
+<MediatrForm TRequest="Zonorai.Sandbox.Pages.Model" TResponse="int" OnSubmit="async x => await FormSubmitted(x)">
+    <MudTextField @bind-Value="@context.Model.Name"></MudTextField>
+</MediatrForm>
+<MudButton OnClick="ShowDialog">Test Dialog</MudButton>*@
+<MudAddressForm DetailedForm="false" @bind-Value="Address"></MudAddressForm>
+@*<MudAddressForm UseSingleInput="false" Value="Address"></MudAddressForm>
+<CountryAutocompleteField></CountryAutocompleteField>
+<AddressForm Value="Address"></AddressForm>
+
+<MudText>@Text</MudText>*@
+<MudButton OnClick="WriteAddress" Variant="Variant.Filled" Color="Color.Primary">Print Address</MudButton>
+@code{
+    private string Text { get; set; }
+    async Task SubmitForm(Zonorai.Sandbox.Pages.Model model)
+    {
+        Console.WriteLine(model.Name);
+    }
+
+    MudAddress Address { get; set; } = new(){FormattedAddress = "290 10th St, Hermanus, 7200, South Africa",PlaceId = "ChIJdzATXW8Jzh0RDaGawUGMvZ0"};
+    async Task FormSubmitted(int? hello)
+    {
+        Console.WriteLine(hello);
+        await Task.CompletedTask;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var value = await _autocomplete.GetGeoCodingFromPlaceId("ChIJdzATXW8Jzh0RDaGawUGMvZ0");
+        Text = JsonConvert.SerializeObject(value);
+       await base.OnInitializedAsync();
+    }
+
+    void WriteAddress()
+    {
+        Console.WriteLine(Address.City);
+        Console.WriteLine(Address.CountryCode);
+        Console.WriteLine(Address.Country);
+        Console.WriteLine(Address.Province);
+        Console.WriteLine(Address.StreetAddress);
+        Console.WriteLine(Address.AddressLineTwo);
+        Console.WriteLine(Address.ZipCode);
+        Console.WriteLine(Address.FormattedAddress);
+        Console.WriteLine(Address.PlaceId);
+    }
+    void ShowDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText","This the body text of the prompt");
+        parameters.Add("ButtonText","Testing");
+        _dialogService.Show<PromptDialog>("Testing", parameters);
+    }
+    
+
+}

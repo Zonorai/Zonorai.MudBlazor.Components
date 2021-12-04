@@ -1,5 +1,150 @@
-<h3>FluentForm</h3>
+@using FluentValidation
+@using Zonorai.MudBlazorComponents.Models
+@using System.Reflection
+@using System.Linq.Expressions
+@typeparam TModel where TModel : class
+@inherits MudForm
+@inject IEnumerable<IValidator<TModel>> _validators;
+
+
+<MudText Typo="Typo.h4" GutterBottom="true">@FormHeaderText</MudText>
+@if (AutoForm)
+{
+    foreach (var p in Properties)
+    {
+        
+        
+            
+            <MudTextField T="string" Label="@p.Key.Name" ValueChanged="@(x => OnValueChanged(x,@p.Key.Name))" Validation="ValidateValue"></MudTextField>
+        
+        if (p.Value is int iValue)
+        {
+            Expression<Func<int>> expression = () => (int)p.Key.GetValue(Model);
+            <MudNumericField T="int" Label="@p.Key.Name" Value="@iValue" ValueChanged="@(x => OnValueChanged(x,@p.Key.Name))" For="@expression" Validation="ValidateValue"></MudNumericField>
+        }
+        if (p.Value is DateTime dtValue)
+        {
+            Expression<Func<DateTime?>> expression = () => (DateTime)p.Key.GetValue(Model);
+            <MudDatePicker Label="@p.Key.Name" DateChanged="@(x => OnValueChanged(x,@p.Key.Name))" For="@expression" Validation="ValidateValue"></MudDatePicker>
+        }
+    }
+}
+@if (!AutoForm)
+{
+    @FormFields(new FluentFormContext<TModel>(ValidateValue, (TModel)Model))
+}
+
+
+<MudButton Disabled="ButtonDisabled" Class="mt-6" OnClick="async () => await SubmitAsync()" Variant="@ButtonVariant" Color="@ButtonColor" Size="Size.Large" FullWidth="FullWidthButton">@SubmitButtonText</MudButton>
+
 
 @code {
+
+    void OnValueChanged(object e, string prop)
+    {
+        var p = Model.GetType().GetProperty(prop);
+        if (p.PropertyType == typeof(int))
+        {
+            var intValue = Convert.ToInt32(e);
+            p.SetValue(Model, intValue);
+        }
+        if (p.PropertyType == typeof(string))
+        {
+            p.SetValue(Model, e.ToString());
+        }
+    }
+
+    public Dictionary<PropertyInfo, object> Properties { get; set; } = new Dictionary<PropertyInfo, object>();
+
     
+    protected override void OnParametersSet()
+    {
+        AutoForm = true;
+        Model = Activator.CreateInstance<TModel>();
+        IsValidChanged = EventCallback.Factory.Create<bool>(this, ValidationChanged);
+        
+        base.OnParametersSet();
+        Console.WriteLine("Params Set");
+    }
+    
+    protected override void OnInitialized()
+    {
+        Model = Activator.CreateInstance<TModel>();
+        var props = Model?.GetType().GetProperties();
+        foreach (var p in props)
+        {
+            Properties.Add(p, p.GetValue(Model));
+        }
+        
+        Console.WriteLine(Properties.Count);
+        Console.WriteLine("Initialized");
+        Properties.First().Key.SetValue(Model, "Hello");
+        Expression<Func<string>> expression1 = () => (string)Properties.First().Key.GetValue(Model);
+        var x = expression1.Compile().Invoke();
+        Console.Write(x);
+        Console.WriteLine("Should have printed complied");
+    }
+    [Parameter]
+    public bool AutoForm { get; set; } = false;
+    [Parameter]
+    public bool ButtonDisabled { get; set; } = true;
+
+    [Parameter]
+    public bool FullWidthButton { get; set; } = false;
+
+    [Parameter]
+    public string SubmitButtonText { get; set; } = "Submit";
+
+    [Parameter]
+    public Variant ButtonVariant { get; set; } = Variant.Filled;
+
+    [Parameter]
+    public Color ButtonColor { get; set; } = Color.Primary;
+
+    /// <summary>Child content of component.</summary>
+    [Parameter]
+    public RenderFragment<FluentFormContext<TModel>> FormFields { get; set; }
+
+    [Parameter]
+    public Func<TModel, Task> SubmitAsyncMethod { get; set; }
+
+    [Parameter]
+    public string FormHeaderText { get; set; }
+
+    async Task SubmitAsync()
+    {
+        await Validate();
+        if (!IsValid)
+        {
+            ButtonDisabled = true;
+            return;
+        }
+        await SubmitAsyncMethod.Invoke((TModel)Model);
+    }
+
+    void ValidationChanged(bool valid)
+    {
+        ButtonDisabled = !IsValid;
+
+        StateHasChanged();
+    }
+
+    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+    {
+        if (propertyName.StartsWith("Model."))
+        {
+            propertyName = propertyName.Substring(6);
+        }
+        List<string> errors = new List<string>();
+        foreach (var validator in _validators)
+        {
+            var result = await validator.ValidateAsync(ValidationContext<TModel>.CreateWithOptions((TModel) model, x => x.IncludeProperties(propertyName)));
+            if (!result.IsValid)
+            {
+                errors.AddRange(result.Errors.Select(e => e.ErrorMessage));
+            }
+        }
+        return errors;
+    };
+
 }

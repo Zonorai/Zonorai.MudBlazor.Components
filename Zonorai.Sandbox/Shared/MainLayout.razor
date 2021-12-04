@@ -1,0 +1,233 @@
+﻿
+@inject NavigationManager NavigationManager;
+@inject IJSRuntime _jsRuntime;
+@using MudBlazor
+@using MudBlazor.ThemeManager
+@inherits LayoutComponentBase
+
+        <MudLayout>
+
+            <MudAppBar Elevation="_themeManager.AppBarElevation" Color="Color.Transparent">
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <MudIcon Icon="@Icons.Custom.Brands.MicrosoftAzureDevOps" Size="Size.Large" Class="mx-auto"/>
+                </MudHidden>
+                <MudHidden Breakpoint="Breakpoint.MdAndUp">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+                </MudHidden>
+                <MudHidden Breakpoint="Breakpoint.Xs">
+                    <MudText Typo="Typo.h6" Class="mx-auto">Clokworx Sandbox</MudText>
+                </MudHidden>
+                <MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
+                    <MudText Typo="Typo.subtitle2">Clokworx Sandbox</MudText>
+                </MudHidden>
+                <MudSpacer/>
+                <MudMenu Icon="@Icons.Material.Outlined.Translate" Color="Color.Inherit" Direction="Direction.Bottom" OffsetY="true" Dense="true">
+                    <MudMenuItem>English</MudMenuItem>
+                </MudMenu>
+                <MudMenu Direction="Direction.Left" OffsetX="true" Dense="true" Class="mt-1 ml-4">
+                    <ActivatorContent>
+                        <MudAvatar Image="images/avatar_jonny.jpg"/>
+                    </ActivatorContent>
+                </MudMenu>
+            </MudAppBar>
+
+            <MudDrawer Elevation="_themeManager.DrawerElevation" Variant="DrawerVariant.Mini" ClipMode="_themeManager.DrawerClipMode" Color="Color.Transparent">
+
+                <NavMenu/>
+
+            </MudDrawer>
+            <MudMainContent>
+
+                <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
+                    @Body
+                </MudContainer>
+
+            </MudMainContent>
+
+        </MudLayout>
+
+        <MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme"/>
+
+<MudThemeProvider Theme="_themeManager.Theme"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+
+@code {
+    private ThemeManagerTheme _themeManager = new();
+    public Dictionary<string, object> mainContentAttributes = new() {};
+    public bool _drawerOpen = true;
+    public bool _themeManagerOpen = false;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    void OpenThemeManager(bool value)
+    {
+        _themeManagerOpen = value;
+    }
+
+    void UpdateTheme(ThemeManagerTheme value)
+    {
+        _themeManager = value;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _themeManager.Theme = new AdminDashboardTheme();
+        StateHasChanged();
+
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    public class AdminDashboardTheme : MudTheme
+    {
+        private string transparent = "rgba(0, 0, 0, 0.7)";
+
+        public AdminDashboardTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = Colors.Blue.Default,
+                Secondary = Colors.Blue.Darken1,
+                Tertiary = Colors.Blue.Accent4,
+                Black = "#27272f",
+                Background = transparent,
+                BackgroundGrey = transparent,
+                Surface = transparent,
+                DrawerBackground = "#27272f",
+                DrawerText = "rgba(255,255,255, 0.50)",
+                DrawerIcon = "rgba(255,255,255, 0.50)",
+                AppbarBackground = transparent,
+                AppbarText = "rgba(255,255,255, 0.70)",
+                TextPrimary = "rgba(255,255,255, 0.70)",
+                TextSecondary = "rgba(255,255,255, 0.50)",
+                ActionDefault = "#adadb1",
+                ActionDisabled = "rgba(255,255,255, 0.26)",
+                ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+                Divider = "rgba(255,255,255, 0.12)",
+                DividerLight = "rgba(255,255,255, 0.06)",
+                TableLines = "rgba(255,255,255, 0.12)",
+                LinesDefault = "rgba(255,255,255, 0.12)",
+                LinesInputs = "rgba(255,255,255, 0.3)",
+                TextDisabled = "rgba(255,255,255, 0.2)"
+            };
+
+
+            LayoutProperties = new LayoutProperties()
+            {
+                DefaultBorderRadius = "16px"
+            };
+
+            Typography = new Typography()
+            {
+                Default = new Default()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = ".875rem",
+                    FontWeight = 400,
+                    LineHeight = 1.43,
+                    LetterSpacing = ".01071em"
+                },
+                H1 = new H1()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = "6rem",
+                    FontWeight = 300,
+                    LineHeight = 1.167,
+                    LetterSpacing = "-.01562em"
+                },
+                H2 = new H2()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = "3.75rem",
+                    FontWeight = 300,
+                    LineHeight = 1.2,
+                    LetterSpacing = "-.00833em"
+                },
+                H3 = new H3()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = "3rem",
+                    FontWeight = 400,
+                    LineHeight = 1.167,
+                    LetterSpacing = "0"
+                },
+                H4 = new H4()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = "2.125rem",
+                    FontWeight = 400,
+                    LineHeight = 1.235,
+                    LetterSpacing = ".00735em"
+                },
+                H5 = new H5()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = "1.5rem",
+                    FontWeight = 400,
+                    LineHeight = 1.334,
+                    LetterSpacing = "0"
+                },
+                H6 = new H6()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = "1.25rem",
+                    FontWeight = 400,
+                    LineHeight = 1.6,
+                    LetterSpacing = ".0075em"
+                },
+                Button = new Button()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = ".875rem",
+                    FontWeight = 500,
+                    LineHeight = 1.75,
+                    LetterSpacing = ".02857em"
+                },
+                Body1 = new Body1()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = "1rem",
+                    FontWeight = 400,
+                    LineHeight = 1.5,
+                    LetterSpacing = ".00938em"
+                },
+                Body2 = new Body2()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = ".875rem",
+                    FontWeight = 400,
+                    LineHeight = 1.43,
+                    LetterSpacing = ".01071em"
+                },
+                Caption = new Caption()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = ".75rem",
+                    FontWeight = 400,
+                    LineHeight = 1.66,
+                    LetterSpacing = ".03333em"
+                },
+                Subtitle2 = new Subtitle2()
+                {
+                    FontFamily = new[] {"Montserrat", "Helvetica", "Arial", "sans-serif"},
+                    FontSize = ".875rem",
+                    FontWeight = 500,
+                    LineHeight = 1.57,
+                    LetterSpacing = ".00714em"
+                }
+            };
+            Shadows = new Shadow();
+            ZIndex = new ZIndex();
+        }
+    }
+}
